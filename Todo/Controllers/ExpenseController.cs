@@ -48,11 +48,7 @@ namespace Todo.Controllers
 
         //Get delete
         public IActionResult Delete(int id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+        {        
 
             var obj = _db.Expense.Find(id);
             if (obj == null)

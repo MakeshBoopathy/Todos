@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Todo.Common;
 using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Todo.Models
 {
@@ -29,12 +30,13 @@ namespace Todo.Models
 
         [DisplayName("Item Name")]
         [Required(ErrorMessage ="Enter Item")]
-        [Exist(ErrorMessage = "Item Exist")]
+        [Remote(action: "ItemExist", controller: "Home")]
         public string ItemName { get; set; }
 
         [DisplayName("Completion Date")]
-        [DataType(DataType.Date)]       
-        [DateRange("01/01/2030")]        
+        [DataType(DataType.Date)]     
+        [DisplayFormat(ApplyFormatInEditMode = true)]
+        [Remote(action:"DateRange",controller:"Home")]   
         public DateTime date { get; set; }
 
     }

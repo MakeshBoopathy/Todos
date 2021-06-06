@@ -2,6 +2,7 @@
 using Todo.Data;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +22,26 @@ namespace Todo.Controllers
         public HomeController(ApplicationDbContext db)
         {
             _db = db;
+        }
+
+        [AcceptVerbs("GET","POST")]
+        public IActionResult DateRange(Item item)
+        {
+            if(item.date < DateTime.Now)
+            {
+                return Json("Date must be greater than today");
+            }
+            return Json(true);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult ItemExist(Item item)
+        {
+            if( _db.Item.Any(itemd => itemd.ItemName == item.ItemName))            
+            {
+                return Json("Already Created");
+            }
+            return Json(true);
         }
 
         public IActionResult Index()
@@ -79,7 +100,28 @@ namespace Todo.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
+           
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdatePost(ItemModel obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Item.Update(obj.Item);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(obj);
+        }
+
+        public String Filter(string filterType)
+        {
+            return filterType;
+        }
+
+  
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

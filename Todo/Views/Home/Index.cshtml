@@ -20,47 +20,40 @@
                             <form method="post" asp-action="Create">
                                 <div class="border p-3">
                                     <div class="form-group row">
-                                        <h2 class="text-black-50 pl-3">Add Item</h2>
+                                        <h2 class="text-black-50 pl-3">Add Task</h2>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="form-group row">
-                                                <div class="col-6">
-                                                    <label asp-for="Item.ItemName"></label>
-                                                </div>
-                                                <div class="col-6">
-                                                    <label asp-for="Item.date"></label>
-                                                </div>
-                                            </div>
+                                            <div class="form-group">
 
-                                            <div class="form-group row">
-                                                <div class="col-6">
+                                                <div class="col-6 text-left mb-5">
+                                                    <label class="text-dark font-weight-bold mb-3" asp-for="Item.ItemName"></label>
                                                     <input asp-for="Item.ItemName" class="form-control" />
                                                     <span asp-validation-for="Item.ItemName" class="text-danger"></span>
                                                 </div>
 
-                                                <div class="col-6">
-                                                    <input asp-for="Item.date" class="form-control" />
-                                                    <span asp-validation-for="Item.date" class="text-danger"></span>
+                                                <div class="col-6 text-left mb-5">
+                                                    <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>                                                    
+                                                        <input asp-for="Item.date" class="form-control" />
+                                                        <span asp-validation-for="Item.date" class="text-danger"></span>
                                                 </div>
-                                            </div>
+                                            </div>                                            
 
-                                            <div class="form-group row">
-                                                <div class="col-8 offset-2 text-center row">
-                                                    <div class="col">
-                                                        <input type="submit" class="btn btn-info w-75" value="create" />
-                                                    </div>
-                                                    <div class="col">
-                                                        <a class="btn btn-danger w-75" data-dismiss="modal">Back</a>
+                                                <div class="form-group row">
+                                                    <div class="col-8 offset-2 text-center row">
+                                                        <div class="col">
+                                                            <input type="submit" class="btn btn-info w-75" value="Create" />
+                                                        </div>
+                                                        <div class="col">
+                                                            <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                        </div>
+                                            </div>
                                     </div>
                                 </div>
                             </form>
-
 
                         </div>
 
@@ -69,7 +62,28 @@
             </div>
         </div>
     </div>
+    <form class="row mt-4 mb-3" asp-controller = "Home" asp-action="Filter" >
+        <div class="mx-3">
+            <input type="radio" name="filter" value="All" checked />
+            <label for="All">All</label>
+        </div>
+        <div class="mx-3">
+            <input type="radio" name="filter" value="OnGoing"  />
+            <label for="OnGoing">OnGoing</label>
+        </div>
+        <div class="mx-3">
+            <input type="radio" name="filter" value="Completed" />
+            <label for="Completed">Completed</label>
+        </div>
+        <div class="mx-3">
+            <input type="radio" name="filter" value="Expired"  />
+            <label for="Expired">Expired</label>
+        </div>
+        <div class="mx-3 mt-n2"><input type="submit" class="btn btn-primary" value="Apply" /></div>        
+    </form>
     <br />
+
+
 
     @if (Model.Items.Count() > 0)
     {
@@ -83,17 +97,23 @@
                         Due Date
                     </th>
                     <th>
+                        Remaining Days
+                    </th>
+                    <th>
                         Status
                     </th>
-
+                    <th>
+                        Options
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.Items)
                 {
                     <tr>
-                        <td width="35%" class="position-relative">@item.ItemName</td>
-                        <td id ="headtext" width="35%">@item.date</td>
+                        <td width="25%" class="position-relative">@item.ItemName</td>
+                        <td id ="headtext" width="20%">@item.date.ToString("MMMM dd, yyyy")</td>
+                        <td width="15%">@RemainingDays(item.date)</td>
                         <td width="10%">
                             <a id="checkbtn" asp-controller="Home" asp-action="Check" asp-route-Id="@item.Id">
                                 <span>
@@ -102,11 +122,92 @@
                                  </span>
                             </a>               
                         </td>
-                        <td width="20%">
-                            <div class="w-100 btn-group" role="group">
-                                <a asp-controller="Home" asp-action="Remove" asp-route-Id="@item.Id" onclick="return confirm('Are You Sure!')" class="btn btn-danger mx-1">
-                                    Delete
-                                </a>
+                        <td width="30%">
+                            <div class="row text-center">
+                                <div class="w-50 btn-group" role="group">
+                                    <a asp-controller="Home" asp-action="Remove" data-toggle="modal" data-target="#deleteModal-@item.Id" class="btn btn-danger mx-1">
+                                        Delete
+                                    </a>
+                                    <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group row">
+                                                        <h2 class="text-black-50 pl-3">Are You Sure?</h2>
+                                                    </div>
+                                                    <a asp-controller="Home" asp-action="Remove" asp-route-Id="@item.Id" class="btn btn-danger mx-1">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-50 btn-group" role="group">
+                                    <a asp-controller="Home" asp-action="Update" asp-route-Id="@item.Id" data-toggle="modal" data-target="#updateModal-@item.Id" class="btn btn-success mx-1">
+                                        Update
+                                    </a>
+                                    <div class="modal fade" id="updateModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <form method="post" asp-action="UpdatePost">
+                                                        <input asp-for="@item.Id" hidden />
+                                                        <div class="border p-3">
+                                                            <div class="form-group row">
+                                                                <h4 class="text-black-50 pl-3">Update Task</h4>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+
+                                                                        <div class="col-6 text-left mb-5">
+                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.ItemName"></label>
+                                                                            <input asp-for="Item.ItemName" class="form-control" value="@item.ItemName" />
+                                                                            <span asp-validation-for="Item.ItemName" class="text-danger"></span>
+                                                                        </div>
+
+                                                                        <div class="col-6 text-left mb-5">
+                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>
+                                                                            <input asp-for="Item.date" class="form-control" value="@item.date.ToString("MMMM dd, yyyy")" />
+                                                                            <span asp-validation-for="Item.date" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row">
+                                                                        <div class="col-8 offset-2 text-center row">
+                                                                            <div class="col">
+                                                                                <input type="submit" class="btn btn-info w-75" value="Update" />
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </td>
@@ -141,8 +242,25 @@
             return "<input  id='checkin' type='checkbox' style='position:absolute;z-Index:-1;' asp-for='Item.completed' />";
         }
     }
+    public String RemainingDays(DateTime dateGiven)
+    {
+        Int32 resDate;
+        resDate = (dateGiven - DateTime.Now).Days + 1;
+
+        if (resDate == 0 || resDate == 1)
+        {
+            return resDate + " Day";
+        }
+        else if(resDate > 1){
+            return resDate + " Days";
+        }
+        else
+        {
+            return "expired";
+        }
+    }
 }
 
 
-@**<input id="checkin" type="checkbox" asp-for="Item.completed" checked />*@
+
 
