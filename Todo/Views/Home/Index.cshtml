@@ -62,7 +62,10 @@
             </div>
         </div>
     </div>
-    <form class="row mt-4 mb-3" asp-controller = "Home" asp-action="Filter" >
+
+
+
+    <form class="row mt-4 mb-3" asp-controller = "Home" asp-action="Index" >
         <div class="mx-3">
             <input type="radio" name="filter" value="All" checked />
             <label for="All">All</label>
@@ -85,8 +88,7 @@
 
 
 
-    @if (Model.Items.Count() > 0)
-    {
+    @if (Model.Items.Count() > 0)    {
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -132,13 +134,14 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
+                                                    <h2 class="text-danger">Delete Task</h2>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group row">
-                                                        <h2 class="text-black-50 pl-3">Are You Sure?</h2>
+                                                        <h3 class="text-black-50 pl-3">Are You Sure?</h3>
                                                     </div>
                                                     <a asp-controller="Home" asp-action="Remove" asp-route-Id="@item.Id" class="btn btn-danger mx-1">
                                                         Delete
@@ -180,9 +183,22 @@
 
                                                                         <div class="col-6 text-left mb-5">
                                                                             <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>
-                                                                            <input asp-for="Item.date" class="form-control" value="@item.date.ToString("MMMM dd, yyyy")" />
+                                                                            <input asp-for="Item.date" class="form-control" value=@item.date.ToString("yyyy-MM-dd") />
                                                                             <span asp-validation-for="Item.date" class="text-danger"></span>
                                                                         </div>
+
+                                                                        <div class="col-6 text-left w-25 mb-5">
+                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.completed"></label>
+                                                                            @if (item.completed == true)
+                                                                            {
+                                                                                <input type='checkbox' class="form-control" asp-for='Item.completed' checked />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <input type='checkbox' class="form-control" asp-for='Item.completed' />
+                                                                            }
+                                                                        </div>
+                                                                        
                                                                     </div>
 
                                                                     <div class="form-group row">
@@ -215,6 +231,24 @@
                 }
             </tbody>
         </table>
+
+ 
+            <ul class="mt-5">
+
+                @for (int i = 0; i <= ViewBag.TotalPages; i++)
+                {                   
+                    if(i!=0){
+                        <li class="mx-1 btn btn-primary"><a class="text-light" href="/?page=@i&?filter=@ViewBag.Selected" onclick="gotopage(@i,@ViewBag.Selected)">@i</a></li>
+                    }
+                    else
+                    {
+                        <li class="mx-1 btn btn-primary"><a class="text-light" href="/?page=@i&?filter=@ViewBag.Selected" onclick="gotopage(@i,@ViewBag.Selected)">Home</a></li>
+                    }
+                    
+                }
+
+            </ul>
+        
     }
     else
     {
@@ -259,8 +293,14 @@
             return "expired";
         }
     }
-}
+
+   }
 
 
+<script type="text/javascript">
+    function gotopage(id, filter) {
 
+        window.Location = "index?filter='" + filter + "'&page=" + id;
+    }
+</script>
 

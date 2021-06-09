@@ -13,7 +13,7 @@ namespace Todo.Controllers
 {
     public class HomeController : Controller
     {
-      
+
      /// <summary>
      /// ///////////////////////todo app//////////////////////
      /// </summary>
@@ -23,10 +23,10 @@ namespace Todo.Controllers
         {
             _db = db;
         }
-
+        
         [AcceptVerbs("GET","POST")]
         public IActionResult DateRange(Item item)
-        {
+        {           
             if(item.date < DateTime.Now)
             {
                 return Json("Date must be greater than today");
@@ -36,7 +36,7 @@ namespace Todo.Controllers
 
         [AcceptVerbs("GET", "POST")]
         public IActionResult ItemExist(Item item)
-        {
+        {            
             if( _db.Item.Any(itemd => itemd.ItemName == item.ItemName))            
             {
                 return Json("Already Created");
@@ -44,13 +44,62 @@ namespace Todo.Controllers
             return Json(true);
         }
 
-        public IActionResult Index()
+        /*public IActionResult Index()
         {
 
             ItemModel itemObj = new ItemModel();
             itemObj.Items = _db.Item;
             return View(itemObj);
-        }
+        }*/
+
+
+        int page_size = 5;
+        public IActionResult Index(int page = 0,string filter="All")
+        {
+            
+            ItemModel itemObj = new ItemModel();
+       
+            int TotalTasks = _db.Item.Count();
+
+            try
+            {
+                ViewBag.TotalPages = TotalTasks / 5;
+            }
+           catch (Exception Ex)
+           {
+                
+               Console.WriteLine(Ex.Message);
+           }
+
+            itemObj.Items = _db.Item;
+
+            
+                if (filter == "Completed")
+                {
+                    itemObj.Items = _db.Item.Where(I => I.completed == true).OrderBy(I => I.Id).Skip(page * page_size).Take(page_size);
+                    ViewBag.Selected = "Completed";
+                }
+
+                if (filter == "OnGoing")
+                {
+                    itemObj.Items = _db.Item.Where(I => I.date >= DateTime.Now && I.completed == false).OrderBy(I => I.Id).Skip(page * page_size).Take(page_size);
+                    ViewBag.Selected = "OnGoing";
+                }
+
+                if (filter == "Expired")
+                {
+                    itemObj.Items = _db.Item.Where(I => I.date < DateTime.Now && I.completed == false).OrderBy(I => I.Id).Skip(page * page_size).Take(page_size);
+                    ViewBag.Selected = "Expired";
+                }
+
+                if (filter == "All")
+                {
+                    itemObj.Items = _db.Item.OrderBy(I => I.Id).Skip(page * page_size).Take(page_size);
+                    ViewBag.Selected = "All";
+                }
+           
+            return View(itemObj);
+            }
 
    
         [HttpPost]
@@ -58,7 +107,7 @@ namespace Todo.Controllers
         public IActionResult Create(ItemModel obj)
         {
             _db.Item.Add(obj.Item);
-            _db.SaveChanges();
+            _db.SaveChanges();       
             return RedirectToAction("Index");
         }
 
@@ -106,6 +155,7 @@ namespace Todo.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdatePost(ItemModel obj)
         {
+        
             if (ModelState.IsValid)
             {
                 _db.Item.Update(obj.Item);
@@ -116,9 +166,12 @@ namespace Todo.Controllers
             return View(obj);
         }
 
-        public String Filter(string filterType)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Filter(string filter)
         {
-            return filterType;
+            return View("Index");
         }
 
   

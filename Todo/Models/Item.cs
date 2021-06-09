@@ -14,6 +14,7 @@ namespace Todo.Models
     {
         public Item Item { get; set; }
         public IEnumerable<Item> Items { get; set; }
+
     }
 
     public class Item
@@ -29,18 +30,16 @@ namespace Todo.Models
         public bool completed { get; set; }
 
         [DisplayName("Item Name")]
-        [Required(ErrorMessage ="Enter Item")]
-        [Remote(action: "ItemExist", controller: "Home")]
+        [Required(ErrorMessage = "Enter Item")]
+        [Remote(action: "ItemExist", controller: "Home",AdditionalFields ="initialProductcode")]
         public string ItemName { get; set; }
 
         [DisplayName("Completion Date")]
-        [DataType(DataType.Date)]     
+        [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true)]
-        [Remote(action:"DateRange",controller:"Home")]   
+        [Remote(action: "DateRange", controller: "Home")]
         public DateTime date { get; set; }
 
     }
-
-   
-  //  
+    //  
 }
