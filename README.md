@@ -1,2 +1,0 @@
-# Todos
-todo list app

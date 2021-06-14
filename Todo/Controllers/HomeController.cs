@@ -63,7 +63,7 @@ namespace Todo.Controllers
 
             int TotalTasks = _db.Item.Count();
 
-            ViewBag.TotalPages = TotalTasks / page_size;
+            ViewBag.TotalPages = TotalTasks / 5;
 
 
             if (filter == "Completed")
