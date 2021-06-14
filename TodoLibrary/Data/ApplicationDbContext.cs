@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Todo.Data
+namespace TodoLibrary.Data
 {
     public class ApplicationDbContext :DbContext
     {

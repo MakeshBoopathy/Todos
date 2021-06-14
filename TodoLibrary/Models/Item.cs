@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Todo.Models
+namespace TodoLibrary.Models
 {
     public class ItemModel
     {

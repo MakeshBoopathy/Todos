@@ -10,7 +10,7 @@ using TodoLibrary.Models;
 using TodoLibrary.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Todo.Controllers
+namespace TodoLibrary.Controllers
 {
     public class HomeController : Controller
     {
