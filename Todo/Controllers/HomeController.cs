@@ -65,7 +65,7 @@ namespace Todo.Controllers
 
             ViewBag.TotalPages = TotalTasks / 5;
 
-
+            throw new Exception("new ");
             if (filter == "Completed")
                 {               
                 itemObj.Items = _db.Item.Where(I => I.completed == true).OrderBy(I => I.Id).Skip(page * page_size).Take(page_size);

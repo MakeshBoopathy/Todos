@@ -1,0 +1,55 @@
+﻿
+@model TodoLibrary.Models.ItemModel
+
+
+    <form method="post" asp-controller="Home" asp-action="UpdatePost">
+        <input asp-for="Item.Id" hidden value="@Model.Item.Id" />
+        <div class="border p-3">
+            <div class="form-group row">
+                <h4 class="text-black-50 pl-3">Update Task</h4>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+
+                        <div class="col-6 text-left mb-5">
+                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.ItemName"></label>
+                            <input asp-for="Item.ItemName" class="form-control" value="@Model.Item.ItemName" />
+                            <span asp-validation-for="Item.ItemName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-6 text-left mb-5">
+                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>
+                            <input asp-for="Item.date" class="form-control" value=@Model.Item.date.ToString("yyyy-MM-dd") />
+                            <span asp-validation-for="Item.date" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-6 text-left w-25 mb-5">
+                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.completed"></label>
+                            @if (Model.Item.completed == true)
+                            {
+                                <input type='checkbox' class="form-control" asp-for='Item.completed' checked />
+                            }
+                            else
+                            {
+                                <input type='checkbox' class="form-control" asp-for='Item.completed' />
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-8 offset-2 text-center row">
+                            <div class="col">
+                                <input type="submit" class="btn btn-info w-75" value="Update" />
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>

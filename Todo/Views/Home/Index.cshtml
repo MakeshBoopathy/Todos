@@ -33,24 +33,24 @@
                                                 </div>
 
                                                 <div class="col-6 text-left mb-5">
-                                                    <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>                                                    
-                                                        <input asp-for="Item.date" class="form-control" />
-                                                        <span asp-validation-for="Item.date" class="text-danger"></span>
+                                                    <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>
+                                                    <input asp-for="Item.date" class="form-control" />
+                                                    <span asp-validation-for="Item.date" class="text-danger"></span>
                                                 </div>
-                                            </div>                                            
+                                            </div>
 
-                                                <div class="form-group row">
-                                                    <div class="col-8 offset-2 text-center row">
-                                                        <div class="col">
-                                                            <input type="submit" class="btn btn-info w-75" value="Create" />
-                                                        </div>
-                                                        <div class="col">
-                                                            <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
-                                                        </div>
+                                            <div class="form-group row">
+                                                <div class="col-8 offset-2 text-center row">
+                                                    <div class="col">
+                                                        <input type="submit" class="btn btn-info w-75" value="Create" />
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
                                                     </div>
                                                 </div>
-
                                             </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -65,31 +65,32 @@
 
 
 
-    <form class="row mt-4 mb-3" asp-controller = "Home" asp-action="Index" >
+    <form class="row mt-4 mb-3" asp-controller="Home" asp-action="Index">
         <div class="mx-3">
-            <input type="radio" name="filter" value="All" @if (ViewBag.selected == "All") { @Html.Raw("checked") }/>
+            <input type="radio" name="filter" value="All" @if (ViewBag.selected == "All") { @Html.Raw("checked") } />
             <label for="All">All</label>
         </div>
         <div class="mx-3">
-            <input type="radio" name="filter" value="OnGoing"  @if (ViewBag.selected == "OnGoing") { @Html.Raw("checked") }/>
+            <input type="radio" name="filter" value="OnGoing" @if (ViewBag.selected == "OnGoing") { @Html.Raw("checked") } />
             <label for="OnGoing">OnGoing</label>
         </div>
         <div class="mx-3">
-            <input type="radio" name="filter" value="Completed" @if (ViewBag.selected == "Completed") { @Html.Raw("checked") }/>
+            <input type="radio" name="filter" value="Completed" @if (ViewBag.selected == "Completed") { @Html.Raw("checked") } />
             <label for="Completed">Completed</label>
         </div>
         <div class="mx-3">
-            <input type="radio" name="filter" value="Expired"  @if (ViewBag.selected == "Expired") { @Html.Raw("checked") }/>
+            <input type="radio" name="filter" value="Expired" @if (ViewBag.selected == "Expired") { @Html.Raw("checked") } />
             <label for="Expired">Expired</label>
         </div>
-       
-        <div class="mx-3 mt-n2"><input type="submit" class="btn btn-primary" value="Apply" /></div>        
+
+        <div class="mx-3 mt-n2"><input type="submit" class="btn btn-primary" value="Apply" /></div>
     </form>
     <br />
 
 
 
-    @if (Model.Items.Count() > 0)    {
+    @if (Model.Items.Count() > 0)
+    {
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -115,15 +116,15 @@
                 {
                     <tr>
                         <td width="25%" class="position-relative">@item.ItemName</td>
-                        <td id ="headtext" width="20%">@item.date.ToString("MMMM dd, yyyy")</td>
+                        <td id="headtext" width="20%">@item.date.ToString("MMMM dd, yyyy")</td>
                         <td width="15%">@item.RemainingDays()</td>
                         <td width="10%">
                             <a id="checkbtn" asp-controller="Home" asp-action="Check" asp-route-Id="@item.Id">
                                 <span>
-                                    @Html.Raw(@GetSomeString(@item.completed)) 
+                                    @Html.Raw(@GetSomeString(@item.completed))
                                     <label asp-for="Item.completed" class="position-absolute text-white p-2 bg-transparent">Completed</label>
-                                 </span>
-                            </a>               
+                                </span>
+                            </a>
                         </td>
                         <td width="30%">
                             <div class="row text-center">
@@ -153,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="w-50 btn-group" role="group">
-                                    <a asp-controller="Home" asp-action="Update" asp-route-Id="@item.Id" data-toggle="modal" data-target="#updateModal-@item.Id" class="btn btn-success mx-1">
+                                    <a data-toggle="modal" data-target="#updateModal-@item.Id" class="btn btn-success mx-1 text-light" onclick="javascript:showForm(@item.Id)">
                                         Update
                                     </a>
                                     <div class="modal fade" id="updateModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -163,93 +164,6 @@
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                   <form method="post" asp-action="UpdatePost">
-                                                        <input asp-for="Item.Id" hidden value="@item.Id" />
-                                                        <div class="border p-3">
-                                                            <div class="form-group row">
-                                                                <h4 class="text-black-50 pl-3">Update Task</h4>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-
-                                                                        <div class="col-6 text-left mb-5">
-                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.ItemName"></label>
-                                                                            <input asp-for="Item.ItemName" class="form-control" value="@item.ItemName" />
-                                                                            <span asp-validation-for="Item.ItemName" class="text-danger"></span>
-                                                                        </div>
-
-                                                                        <div class="col-6 text-left mb-5">
-                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.date"></label>
-                                                                            <input asp-for="Item.date" class="form-control" value=@item.date.ToString("yyyy-MM-dd") />
-                                                                            <span asp-validation-for="Item.date" class="text-danger"></span>
-                                                                        </div>
-
-                                                                        <div class="col-6 text-left w-25 mb-5">
-                                                                            <label class="text-dark font-weight-bold mb-3" asp-for="Item.completed"></label>
-                                                                            @if (item.completed == true)
-                                                                            {
-                                                                                <input type='checkbox' class="form-control" asp-for='Item.completed' checked />
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <input type='checkbox' class="form-control" asp-for='Item.completed' />
-                                                                            }
-                                                                        </div>
-
-                                                                    </div>
-
-                                                                    <div class="form-group row">
-                                                                        <div class="col-8 offset-2 text-center row">
-                                                                            <div class="col">
-                                                                                <input type="submit" class="btn btn-info w-75" value="Update" />
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form> 
-
-                                                @*    @using (Html.BeginForm(actionName:"UpdatePost",controllerName:"Home",method:FormMethod.Post))
-                                                    {
-                                                        @Html.HiddenFor(I => I.Item.Id,new {@Value = item.Id})
-                                                        <div class="form-group row">
-                                                            <h4 class="text-black-50 pl-3">Update Task</h4>
-                                                        </div>
-                                                        <div class="col-6 text-left mb-5">                                                            
-                                                            @Html.LabelFor(I => I.Item.ItemName,new { @class= "text-dark font-weight-bold mb-3"})
-                                                            @Html.TextBoxFor(I => I.Item.ItemName,new { @class = "form-control",@Value = "Hello"})
-                                                            @Html.ValidationMessageFor(I => I.Item.ItemName)
-                                                        </div>
-                                                        <div class="col-6 text-left mb-5">
-                                                            @Html.LabelFor(I => I.Item.date, htmlAttributes: new { @class = "text-dark font-weight-bold mb-3" })
-                                                            @Html.TextBoxFor(I => I.Item.date, htmlAttributes: new { @class = "form-control",@Value = item.date })
-                                                            @Html.ValidationMessageFor(I => I.Item.date)
-                                                        </div>
-                                                        <div class="col-6 text-left w-25 mb-5">
-                                                            @Html.LabelFor(I => I.Item.completed, htmlAttributes: new { @class = "text-dark font-weight-bold mb-3" })
-                                                            @Html.CheckBoxFor(I => I.Item.completed, htmlAttributes: new { @class = "form-control" })
-                                                        </div>
-
-                                                        <div class="form-group row">
-                                                            <div class="col-8 offset-2 text-center row">
-                                                                <div class="col">                                                               
-                                                                    <input type="submit" class="btn btn-info w-75" value="Update" />
-                                                                </div>
-                                                                <div class="col">
-                                                                    <a class="btn btn-danger w-75 text-light" data-dismiss="modal">Back</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    } *@
                                                 </div>
 
                                             </div>
@@ -263,24 +177,28 @@
                 }
             </tbody>
         </table>
+        <div class="modal-body" id="Model-id">
 
- 
-            <ul class="mt-5">
+        </div>
 
-                @for (int i = 0; i <= ViewBag.TotalPages; i++)
-                {                   
-                    if(i!=0){
-                        <li class="mx-1 btn btn-primary"><a class="text-light" href="javascript:gotopage(@i)">@i</a></li>
-                    }
-                    else
-                    {
-                        <li class="mx-1 btn btn-primary"><a class="text-light" href="javascript:gotopage(@i)">Home</a></li>
-                    }
-                    
+
+        <ul class="mt-5">
+
+            @for (int i = 0; i <= ViewBag.TotalPages; i++)
+            {
+                if (i != 0)
+                {
+                    <li class="mx-1 btn btn-primary"><a class="text-light" href="javascript:gotopage(@i)">@i</a></li>
+                }
+                else
+                {
+                    <li class="mx-1 btn btn-primary"><a class="text-light" href="javascript:gotopage(@i)">Home</a></li>
                 }
 
-            </ul>
-        
+            }
+
+        </ul>
+
     }
     else
     {
@@ -320,6 +238,22 @@
         var url = "/home/index?filter=" + filter + "&page=" + id;
 
         location.replace(url);
+    }
+
+    function showForm(todoId) {
+        $.ajax({
+            type: "GET",
+            url: "/UpdatePage/update",
+            data: { TodoId: todoId },
+            success: function (response) {
+                debugger;
+                $("#Model-id").html(response);
+                $("#Model-id").modal("show");
+            },
+            error: function (xhr, status, error) {
+                alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        })
     }
 </script>
 
